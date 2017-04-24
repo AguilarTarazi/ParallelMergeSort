@@ -1,0 +1,15 @@
+mainmodule main {
+
+  readonly CProxy_Main mainProxy;
+  readonly int numElements;
+
+  extern module merge;
+
+  mainchare Main {
+    entry Main(CkArgMsg* msg);
+    entry void arrayDisplayFinished();
+  };
+
+  initproc void processorStartupFunc();
+
+};
