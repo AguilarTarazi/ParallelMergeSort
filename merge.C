@@ -255,7 +255,7 @@ void Merge::solicitarPosicionDer(int indexN, int indexDer, int phaseN){
       char str[20];
       sprintf(str,"%d",thisIndex);
       strcat(str,"986   ");
-      // imprimir(str);
+      imprimir(str);
   }
 }
 
