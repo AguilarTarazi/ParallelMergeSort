@@ -242,16 +242,16 @@ void Merge::solicitarPosicionDer(int indexN, int indexDer, int phaseN){
     }
   }
   else{
-      if(phaseN > phase){
-        CkPrintf("phaseN > phase. [%d] phase=%d (p%d,pd%d)    no está en la misma fase que    [%d] phaseN=%d                     986 C1\n",thisIndex,phase,posicion,posicionDer,indexN,phaseN);
-        CkPrintf("[%d] Envía posicionDer=%d a [%d]  986 B2\n",thisIndex,-1,indexN);
-        thisProxy[indexN].cambiarPosicionDer(-1,indexDer);
-      }else{
-        CkPrintf("phaseN < phase. [%d] phase=%d (p%d,pd%d)    no está en la misma fase que    [%d] phaseN=%d                     986 C2\n",thisIndex,phase,posicion,posicionDer,indexN,phaseN);
-        CkPrintf("[%d] %d < %d ? ++++++++++++++++p%d numElements%d indexN%d p%d +++++++++++++++ 986A Env\n",thisIndex,posicion,(numElements-indexN)/(phase-1),posicion,numElements,indexN,phase);
-        indexLlamoIzq = indexN;
-      }
-      // thisProxy[indexN].cambiarPosicionDer(-1,indexDer); //CON ESTO ANDA HASTA 21 sin lo de este else
+      // if(phaseN > phase){
+      //   CkPrintf("phaseN > phase. [%d] phase=%d (p%d,pd%d)    no está en la misma fase que    [%d] phaseN=%d                     986 C1\n",thisIndex,phase,posicion,posicionDer,indexN,phaseN);
+      //   CkPrintf("[%d] Envía posicionDer=%d a [%d]  986 B2\n",thisIndex,-1,indexN);
+      //   thisProxy[indexN].cambiarPosicionDer(-1,indexDer);
+      // }else{
+      //   CkPrintf("phaseN < phase. [%d] phase=%d (p%d,pd%d)    no está en la misma fase que    [%d] phaseN=%d                     986 C2\n",thisIndex,phase,posicion,posicionDer,indexN,phaseN);
+      //   CkPrintf("[%d] %d < %d ? ++++++++++++++++p%d numElements%d indexN%d p%d +++++++++++++++ 986A Env\n",thisIndex,posicion,(numElements-indexN)/(phase-1),posicion,numElements,indexN,phase);
+      //   indexLlamoIzq = indexN;
+      // }
+      thisProxy[indexN].cambiarPosicionDer(-1,indexDer); //CON ESTO ANDA HASTA 21 sin lo de este else
       char str[20];
       sprintf(str,"%d",thisIndex);
       strcat(str,"986   ");
