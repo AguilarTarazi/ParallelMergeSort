@@ -1,4 +1,5 @@
 #include "main.decl.h"
+#include "main.decl.h"
 #include "main.h"
 #include "merge.decl.h"
 #include <stdlib.h>
@@ -26,12 +27,12 @@ Main::Main(CkArgMsg* msg) {
     // Create the array of Merge chare objects.
     mergeArray = CProxy_Merge::ckNew(numElements);
 
-    char str[15] = "Before ";
     // Display the array and then start the first phase
-    mergeArray.displayValue(7,str);
+    // mergeArray.displayValue(7,str);
     // arrayDisplayFinished();
-    // startArrayDisplay(&Main::startNextPhase, str);
-    startNextPhase();
+    char str[15] = "Before";
+    startArrayDisplay(&Main::startNextPhase, str);
+    // startNextPhase();
     CkPrintf("\n\n\n");
 }
 
@@ -51,6 +52,11 @@ void Main::startArrayDisplay(void (Main::*cbFunc)(void), char* prefix) {
    //   (postDisplayFunc) and start displaying the values.
    postDisplayFunc = cbFunc;
    mergeArray[0].displayValue(strlen(prefix)+1, prefix);
+}
+
+void Main::terminar() {
+  char str[15] = "After ";
+  startArrayDisplay(&Main::exit, str);
 }
 
 void Main::arrayDisplayFinished() {

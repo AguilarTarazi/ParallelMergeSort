@@ -5,7 +5,8 @@ class Merge : public CBase_Merge {
 
  private:
   /// Member Variables (Object State) ///
-  int myValue, newPos, newNumElements, phase, tempo, indexSave, posicion, posicionDer, indexLlamoIzq, accion, primero, checkines;
+  int myValue, newPos, newNumElements, phase, tempo, indexSave, posicion, posicionDer;
+  int indexLlamoIzq, accion, primero, checkines, cantFases;
   bool activo, estoyActualizando;
   /// Member Functions (private) ///
 
@@ -17,7 +18,7 @@ class Merge : public CBase_Merge {
   /// Entry Methods ///
   void initPhase(int,int,int);
   void setPhase(int);
-  void startCompare(int,int,bool);
+  void startCompare(int,int,int,bool);
   void requestSwap(int,int,int);
   void acceptSwap(int,int);
   void cambiarPosicion(int,bool);
