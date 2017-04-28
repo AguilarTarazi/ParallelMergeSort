@@ -5,6 +5,7 @@ module merge {
     entry void initPhase(int,int,int);
     entry void setPhase(int);
     entry void startCompare(int,int,bool,int,int);
+    entry void startComparePhase(int,int,bool,int,int,int);
     entry void requestSwap(int,int,int);
     entry void acceptSwap(int,int);
     entry void cambiarPosicion(int,bool);
