@@ -1,4 +1,4 @@
-CHARMDIR = /mnt/DATOS/INGENIERIA/PPS/charm-6.7.1
+CHARMDIR = /media/mauri/DATOS/INGENIERIA/PPS/charm-6.7.1
 CHARMC = $(CHARMDIR)/bin/charmc $(OPTS)
 
 
