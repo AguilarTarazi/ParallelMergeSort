@@ -1,5 +1,5 @@
 /*
-Anda con hasta 21. No anda con 12. Lo que queda corregir es solicitarPosicionDer
+  Falta fusionar con el Deny.
 */
 
 #include "merge.decl.h"
@@ -25,10 +25,7 @@ Merge::Merge() {
   posicion = -1;
   posicionDer = -1;
   indexLlamoIzq = -1;
-  accion = 0;
   primero = -1;
-  checkines = 0;
-  estoyActualizando = false;
   cantFases = 0;
 }
 
@@ -37,6 +34,7 @@ Merge::Merge() {
 Merge::Merge(CkMigrateMessage *msg) { }
 
 void Merge::initPhase(int pos, int posDer, int phaseN) {
+  primero = thisIndex;
   phase = phaseN;
   phase++;
   if(posDer!=-1)
@@ -58,8 +56,7 @@ void Merge::initPhase(int pos, int posDer, int phaseN) {
     if(newNumElements>1){
       thisProxy[thisIndex+1].setPhase(phase);
     }
-    primero = thisIndex+1;
-    startCompare(primero,indexSave, posicion, true);
+    startCompare(thisIndex+1,indexSave, true, posicion, primero);
   }
   else{
     thisProxy[thisIndex].initPhase(newPos,pos,phase);
@@ -71,20 +68,18 @@ void Merge::setPhase(int phaseN){
   phase = phaseN;
 }
 
-void Merge::startCompare(int indexDer, int indexS, int posicionN, bool seMovioIndexDer){
+void Merge::startCompare(int indexDer, int indexS, bool seMovioIndexDer, int posicionN, int primeroN){
   CkPrintf("[%d] startCompare con indexDer=%d, phase=%d, posicion=%d, posicionDer=%d\n",thisIndex,indexDer,phase,posicion,posicionDer);
-  char str[2];
-  sprintf(str,"%d",thisIndex);
-  strcat(str," start1");
   //  imprimir(str);
   if(!seMovioIndexDer){
-    CkPrintf("[%d] tempo = myValue, %d<---%d\n",thisIndex,tempo,myValue);
+    // CkPrintf("[%d] tempo = myValue, %d<---%d\n",thisIndex,tempo,myValue);
     tempo = myValue;
   }
   // CkPrintf("\n>>>Comparando [%d]--->v%d,t%d con [%d]    (en phase=%d, posicion=%d, posicionDer=%d)\n",thisIndex,myValue,tempo,indexDer,phase,posicion,posicionDer);
-  // CkPrintf("\n[%d] Comparando con [%d]    (en phase=%d) a%d\n",thisIndex,indexDer,phase,accion++);
+  // CkPrintf("\n[%d] Comparando con [%d]    (en phase=%d) \n",thisIndex,indexDer,phase);
   indexSave = indexS;
   posicion = posicionN;
+  primero = primeroN;
   thisProxy[indexDer].requestSwap(phase,tempo,thisIndex);
 }
 
@@ -92,8 +87,6 @@ void Merge::requestSwap(int phaseN, int valueN, int indexIzq){
   CkPrintf("\t\t\t\t[%d]--->v%d:ph%d requestSwap con [%d]--->v%d:ph%d 983\n",indexIzq,valueN,phaseN,thisIndex,myValue,phase);
   // CkPrintf("Chare [%d] en requestSwap. phase:%d, phaseN:%d\n",thisIndex,phase,phaseN);
   if(phase == phaseN || !activo){
-    // if(activo && phase==phaseN || !activo){
-    // activo = false;
     // CkPrintf("Chare [%d] cambio fase. Comparando Valores %d y %d\n",thisIndex,valueN,myValue);
     if(valueN > myValue){
       phase = phaseN-1;
@@ -124,13 +117,13 @@ void Merge::acceptSwap(int valueN, int indexDer){
 
   // Si el indice derecho no llego al final, seguir comparando
   if(indexDer <= posicion) {
-    CkPrintf("[%d]--->v%d,t%d El indice derecho no se pasó del final. Comparar con el próximo derecho: [%d].\n",thisIndex,myValue,tempo,indexDer);
-    startCompare(indexDer,indexSave,posicion,true); //Se mantiene el Izq y Compara con indexDer (que ya avanzó)
+    // CkPrintf("[%d]--->v%d,t%d El indice derecho no se pasó del final. Comparar con el próximo derecho: [%d].\n",thisIndex,myValue,tempo,indexDer);
+    startCompare(indexDer,indexSave,true,posicion,primero); //Se mantiene el Izq y Compara con indexDer (que ya avanzó)
   }
   else {
-    CkPrintf("[%d]: El indice derecho llegó al final. (indexDer=%d > posicion=%d)\n",thisIndex,indexDer,posicion);
+    // CkPrintf("[%d]: El indice derecho llegó al final. (indexDer=%d > posicion=%d)\n",thisIndex,indexDer,posicion);
     if(indexSave < posicion){
-      CkPrintf("[%d]: Son %d elementos. El indice de guardado no llegó al final. Copiar valores restantes.\n",thisIndex,posicion+1-thisIndex);
+      // CkPrintf("[%d]: Son %d elementos. El indice de guardado no llegó al final. Copiar valores restantes.\n",thisIndex,posicion+1-thisIndex);
       int indexIzq = thisIndex;
       while(indexSave <= posicion)
       if(indexIzq == thisIndex){
@@ -140,10 +133,8 @@ void Merge::acceptSwap(int valueN, int indexDer){
         thisProxy[indexIzq++].saveTempo(indexSave++,false);  //Copia valores restantes
     }
     else{
-      CkPrintf("[%d]: Son solo %d elementos. El indice de guardado llegó al final. (((indexSave==%d)))\n",thisIndex,posicion+1-thisIndex,indexSave);
+      // CkPrintf("[%d]: Son solo %d elementos. El indice de guardado llegó al final. (((indexSave==%d)))\n",thisIndex,posicion+1-thisIndex,indexSave);
       thisProxy[indexSave].saveValue(tempo,true);  //Copia valor restante
-      if(indexSave == thisIndex)
-      CkPrintf("\n\n\n ============456==================================================================\n[%d] ESTO NO DEBERIA EJECUTARSE. ARREGLAR.\n ==============================================================================\n\n",thisIndex);
     }
     check(indexDer);
   }
@@ -153,12 +144,8 @@ void Merge::check(int indexDer){
   phase--;
   cantFases--;
   // thisProxy[indexDer-1].setPhase(phase); // Le cambio la fase
-  CkPrintf("[%d]: --------------NUEVA FASE: %d-----------acc=%d---9867 (posicion=%d, posicionDer=%d)\n",thisIndex,phase,accion++,posicion,posicionDer);
-  // char str[20];
-  // sprintf(str,"%d",thisIndex);
-  // strcat(str,"> AFTER ");
+  CkPrintf("[%d]: --------------NUEVA FASE: %d--------------9867 (posicion=%d, posicionDer=%d)\n",thisIndex,phase,posicion,posicionDer);
   // imprimir("NF");
-  // tempo = myValue;
   if(phase > 0){
    if(activo){
       if(indexLlamoIzq >= 0){
@@ -191,7 +178,7 @@ void Merge::check(int indexDer){
 }
 
 void Merge::saveValue(int value, bool deboCopiarTempo){
-  int random =  rand() % 100;
+  // int random =  rand() % 100;
   // Si son solo dos elementos, le guardo el valor del izquierdo
   if(deboCopiarTempo){
     CkPrintf("[%d] tempo = myValue, %d<---%d sV1\n",thisIndex,tempo,value);
@@ -201,25 +188,25 @@ void Merge::saveValue(int value, bool deboCopiarTempo){
     CkPrintf("[%d] tempo = myValue, %d<---%d sV2\n",thisIndex,tempo,myValue);
     tempo = myValue;
   }
-  CkPrintf("[%d]>> Cambiando valor de %d a %d. a%d (%d)        988\n",thisIndex,myValue,value,accion++,random);
+  // CkPrintf("[%d]>> Cambiando valor de %d a %d. (%d)        988\n",thisIndex,myValue,value,random);
   myValue = value;
-  char str[2];
-  sprintf(str,"%d",random);
-  strcat(str,")_AFTER ");
+  // char str[2];
+  // sprintf(str,"%d",random);
+  // strcat(str,")_AFTER ");
   // if(indexSave==numElements-1 && phase==0) //Tiene un error porque se va a cumplir para todos los de la derecha
 
   CkPrintf("[%d] posicion=%d y indexSave=%d  7777\n",thisIndex,posicion,indexSave);
   // if(thisIndex==0 && posicion==numElements-1 && indexSave==numElements-1)
     // imprimir("saveValue");
-    if(thisIndex==numElements-1 && phase==0 && indexSave==numElements-1){
-      CkPrintf("\n==================================================================\n[%d] ======================  FIN DEL PROGRAMA ======================\n==================================================================\n",thisIndex);
+    if(thisIndex == numElements-1 && phase == 0 && indexSave == numElements-1){
+      // CkPrintf("s\n==================================================================\n[%d] ======================  FIN DEL PROGRAMA ======================\n==================================================================\n",thisIndex);
       mainProxy.terminar();
       // CkPrintf("[%d] posicion=%d y indexSave=%d  777\n",thisIndex,posicion,indexSave);
       // imprimir(str);
     }
 }
 void Merge::saveTempo(int indexSave, bool ok){
-  CkPrintf("[%d] Cambiando TEMPO valor de [%d] a v%d,t%d. a%d\n",thisIndex,indexSave,myValue,tempo,accion++);
+  CkPrintf("[%d] Cambiando TEMPO valor de [%d] a v%d,t%d.\n",thisIndex,indexSave,myValue,tempo);
   // tempo = myValue;
   // if(ok)
     // thisProxy[indexSave].saveValue(tempo,true);
@@ -227,138 +214,91 @@ void Merge::saveTempo(int indexSave, bool ok){
     thisProxy[indexSave].saveValue(tempo,false); //DEFAULT
 }
 void Merge::cambiarPosicion(int indexDer, bool meLlamoYo){
-  CkPrintf("[%d] cambiarPosicion-------------------------------llamadopor=%d------------------------------98****\n",thisIndex,indexDer);
+  // CkPrintf("[%d] cambiarPosicion-------------------------------llamadopor=%d------------------------------98****\n",thisIndex,indexDer);
   // primero = indexDer; // == posicionDer??? +1???
   if(meLlamoYo){
-    CkPrintf("[%d] Cambia su posicion %d a %d-------------------------------------------------------------****\n",thisIndex,posicion,posicionDer);
+    // CkPrintf("[%d] Cambia su posicion %d a %d-------------------------------------------------------------****\n",thisIndex,posicion,posicionDer);
     posicion = posicionDer;
   }
 
-  CkPrintf("[%d] cambiarPosicion-------------------posicion+1 %d------------posicionDer+1=%d y indexDer=%d-----------------------------985-------------****\n",thisIndex,posicion+1,posicionDer+1,indexDer);
-  // CkPrintf("[%d] ======= [%d]------------------------------------------------$$$$$$$$$$$$984$$$$$$$$-------------****\n",thisIndex,indexIzq);
-  // if(posicionDer < numElements-1){
-  if(posicion>-1 && posicion<numElements-1){
-    // if(activo)
-    // if((numElements+posicion+1)/(phase+1)!=(numElements-posicion+1) && (posicion+1)<numElements-1)
-      estoyActualizando = true;
+  CkPrintf("[%d] cambiarPosicion------------888-------posicion+1 %d------------posicionDer+1=%d y indexDer=%d-----------------------------985-------------****\n",thisIndex,posicion+1,posicionDer+1,indexDer);
+  if(posicion>-1 && posicion<numElements-1)
       thisProxy[posicion+1].solicitarPosicionDer(thisIndex,indexDer,phase);
-  }else{
-    // posicionDer = -1;
-    startCompare(indexDer,thisIndex,posicion,false);
+  else{
+    CkPrintf("[%d] cambiarPosicion------PHASE=====%d-----888--------posicion+1 %d------------posicionDer+1=%d y indexDer=%d-----------------------------985-------------****\n",thisIndex,phase,posicion+1,posicionDer+1,indexDer);
+    startCompare(indexDer,thisIndex,false,posicion,primero);
   }
 }
 
 void Merge::solicitarPosicionDer(int indexN, int indexDer, int phaseN){
-  CkPrintf("Entrando a solicitarPosicionDer::: [%d] phase=%d,    [%d] phaseN=%d     estoyAc=%d    acc=%d            9867 Ingreso\n",thisIndex,phase,indexN,phaseN,estoyActualizando,accion++);
-
+  //CkPrintf("Entrando a solicitarPosicionDer::: [%d] phase=%d,    [%d] phaseN=%d     estoyAc=%d                9867 Ingreso\n",thisIndex,phase,indexN,phaseN,estoyActualizando);
   if(phaseN == phase){
-  // if(phaseN == phase && !estoyActualizando){
-    CkPrintf("[%d] %d < %d ? ++++++++++++++++p%d numElements%d indexN%d p%d +++++++++++++++ 986A Env\n",thisIndex,posicion,(numElements-indexN)/(phase-1),posicion,numElements,indexN,phase-1);
-    // if(posicion <= (numElements-indexN)/(phase-1)){
-    // if((posicion < (numElements-indexN)/(phase-1) || posicion==numElements-1) && !estoyActualizando){
-      // CkPrintf("[%d] Envía posicionDer=%d a [%d]  986 A1\n",thisIndex,posicion,indexN);
-      thisProxy[indexN].cambiarPosicionDer(posicion,indexDer);
-      // activo = false;
-    // }else{
-    //   CkPrintf("[%d] Envía posicionDer=%d a [%d]  986 B1\n",thisIndex,-1,indexN);
-    //   thisProxy[indexN].cambiarPosicionDer(-1,indexDer);
-    // }
+    //CkPrintf("[%d] %d < %d ? ++++++++++++++++p%d numElements%d indexN%d p%d +++++++++++++++ 986A Env\n",thisIndex,posicion,(numElements-indexN)/(phase-1),posicion,numElements,indexN,phase-1);
+    thisProxy[indexN].cambiarPosicionDer(posicion,indexDer);
   }
-  else{
-
+  else
       thisProxy[indexN].cambiarPosicionDer(posicionDer,indexDer);
-      // if(phaseN > phase){
-      //   CkPrintf("phaseN > phase. [%d] phase=%d (p%d,pd%d)    no está en la misma fase que    [%d] phaseN=%d                     986 C1\n",thisIndex,phase,posicion,posicionDer,indexN,phaseN);
-      //   CkPrintf("[%d] Envía posicionDer=%d a [%d]  986 B2\n",thisIndex,-1,indexN);
-      //   thisProxy[indexN].cambiarPosicionDer(-1,indexDer);
-      // }else{
-      //   CkPrintf("phaseN < phase. [%d] phase=%d (p%d,pd%d)    no está en la misma fase que    [%d] phaseN=%d                     986 C2\n",thisIndex,phase,posicion,posicionDer,indexN,phaseN);
-      //   CkPrintf("[%d] %d < %d ? ++++++++++++++++p%d numElements%d indexN%d p%d +++++++++++++++ 986A Env\n",thisIndex,posicion,(numElements-indexN)/(phase-1),posicion,numElements,indexN,phase);
-      //   indexLlamoIzq = indexN;
-      // }
-      // thisProxy[indexN].cambiarPosicionDer(indexN-1,indexDer); //CON ESTO ANDA HASTA 21 sin lo de este else
-      // char str[20];
-      // sprintf(str,"%d",thisIndex);
-      // strcat(str,"989   ");
-      // imprimir(str);
-  }
+  // imprimir(str);
 }
 
 void Merge::cambiarPosicionDer(int posicionDerN, int indexDer){
-  estoyActualizando = false;
-  // posicion = posicionDer;
   posicionDer = posicionDerN;
-  CkPrintf("[%d] Cambia posicionDer=%d      acc=%d    9867\n",thisIndex,posicionDer,accion++);
-  //  if(posicion==posicionDer)
-  //     posicionDer=-1;
-  startCompare(indexDer,thisIndex,posicion,true);
+  // CkPrintf("[%d] Cambia posicionDer=%d      9867\n",thisIndex,posicionDer);
+  startCompare(indexDer,thisIndex,true,posicion,primero);
 }
 
-
-// Deniega y Se mueve el Izq
+// Deniega y Se mueve el Índice Izquierdo
 void Merge::denySwap(int value, int indexDer){
-  // myValue = value;
-  // Guarda su valor en el indice de guardado
-  if(indexSave == thisIndex)
-    saveValue(value,false);
-  else
-    thisProxy[indexSave].saveValue(value,false);
-  indexSave++;
-
-  // if(thisIndex < primero) {
-  //     CkPrintf("[%d]--->v%d,t%d El indice izquierdo no se pasó del final. Comparar con el próximo derecho: [%d].\n",thisIndex,myValue,tempo,indexDer);
-  //     startCompare(indexDer,indexSave,true); //Se mantiene el Izq y Compara con indexDer (que ya avanzó)
-  //   }
-  //   else {
-  //     CkPrintf("[%d]: El indice derecho llegó al final. (indexDer=%d > posicion=%d)\n",thisIndex,indexDer,posicion);
-  //     if(indexSave < posicion){
-  // // CkPrintf("Chare [%d]. [%d] le DENEGÓ SWAP. nuevo valor = %d indexSave=%d <> posicion=%d\n",thisIndex,indexDer,value,indexSave,posicion);
-  // if(indexSave == thisIndex){ // Termina la fase
-  //   // CkPrintf("Chare [%d] RESTA fase D\n",thisIndex);
-  //   phase--;
-  //   // CkPrintf("Chare [%d] tiene nueva phase: (%d)\n",thisIndex,phase);
-  //   if(indexLlamoIzq >= 0){
-  //     // CkPrintf("Chare [%d] volviendo a llamar a [%d]\n",thisIndex,indexLlamoIzq);
-  //     thisProxy[indexLlamoIzq].startCompare(thisIndex,indexLlamoIzq,false);
-  //   }
-  //   // check();
-  // }
-  // else{
-  //   // CkPrintf("Chare [%d] AVANZA indexSave D. Llama a [%d]\n",thisIndex,thisIndex+1);
-  //   indexSave++;
-  //   if (thisIndex!=indexDer) {
-  //     thisProxy[thisIndex+1].startCompare(indexDer,indexSave,false); //Avanza el Izq con thisIndex+1 y Compara con indexDer (que se mantuvo igual)
-  //   }
-  //   else{
-  //     // thisProxy[indexSave].saveValue(tempo,thisIndex);
-  //     // thisProxy[0].displayValue(7,"AFTER ");
-  //     // thisProxy[1].displayValue(7,"AFTER ");
-  //     // thisProxy[2].displayValue(7,"AFTER ");
-  //     // thisProxy[3].displayValue(7,"AFTER ");
-  //     // thisProxy[4].displayValue(7,"AFTER ");
-  //   }
-  // }
+    CkPrintf("[%d] en denySwap con indexSave=%d\n",indexSave);
+    if(indexSave == thisIndex){
+        CkPrintf("[%d] guarda %d en [%d]\n",thisIndex,value,indexSave);
+        saveValue(value,false);
+    }else{
+        CkPrintf("[%d] guarda %d en [%d]\n",thisIndex,value,indexSave);
+        thisProxy[indexSave].saveValue(value,false);
+    }
+    indexSave++;
+    if( (thisIndex+1-primero) <= (posicion-primero)/2){
+        thisProxy[thisIndex+1].startCompare(indexDer,indexSave,false,posicion,primero);  //Muevo izquierdo.
+    }
+    else{
+        // if(indexSave < posicion){
+        //    // CkPrintf("[%d]: El indice de guardado no llegó al final. Copiar valores restantes.\n",thisIndex);
+        //     int indexIzq = indexDer;
+        //     while(indexSave <= posicion){
+        //         if(indexIzq==indexDer){
+        //             indexIzq++;
+        //             saveTempo(indexSave++);
+        //         }
+        //         else
+        //             thisProxy[indexIzq++].saveTempo(indexSave++);  //Copia valores restantes
+        //     }
+        // }
+        // else
+        //     thisProxy[indexSave].saveValue(tempo,true);  //Copia valor restante
+        //
+        indexDer = posicion+1;
+        thisProxy[primero].check(indexDer);
+    }
 }
 
 void Merge::imprimir(char* prefix) {
-  // char str[20];
-  // sprintf(str,"%d",thisIndex);
-  // strcat(str,"> AFTER ");
-  // if(checkines==numElements-1)
-    for (int i = 0; i < numElements; i++)
-      thisProxy[i].displayValue(strlen(prefix),prefix);
+  if (thisIndex < numElements - 1) {
+    CkPrintf("%s Merge[%d] =\t\t>>> v(%d) <<<\t\tt %d (p %d --- pd %d --- ph %d )                  (999)\n",prefix,thisIndex, myValue, tempo, posicion, posicionDer,phase);
+    thisProxy[thisIndex + 1].imprimir(prefix);
+  } else {
+    CkPrintf("%s Merge[%d] =\t\t>>> v(%d) <<<\t\tt %d (p %d --- pd %d --- ph %d )                  (999)\n",prefix,thisIndex, myValue, tempo, posicion, posicionDer,phase);
+  }
 }
 
+// Display the value
 void Merge::displayValue(int prefixLen, char* prefix) {
-  // Display the value
   prefix[prefixLen] = '\0';
-  // if(thisIndex==0) CkPrintf("\n");
-  // CkPrintf("%s Merge[%d] =\t\t>>> v(%d) <<<\t\tt %d (p %d --- pd %d --- ph %d )\t\tch=%d                  (999)\n",prefix,thisIndex, myValue, tempo, posicion, posicionDer,phase,checkines);
   if (thisIndex < numElements - 1) {
-    CkPrintf("%s Merge[%d] =\t\t>>> v(%d) <<<\t\tt %d (p %d --- pd %d --- ph %d )\t\tch=%d                  (999)\n",prefix,thisIndex, myValue, tempo, posicion, posicionDer,phase,checkines);
+    CkPrintf("%s Merge[%d] =\t\t>>> v(%d) <<<\t\tt %d (p %d --- pd %d --- ph %d )                  (999)\n",prefix,thisIndex, myValue, tempo, posicion, posicionDer,phase);
     thisProxy[thisIndex + 1].displayValue(prefixLen, prefix);
   } else {
-    CkPrintf("%s Merge[%d] =\t\t>>> v(%d) <<<\t\tt %d (p %d --- pd %d --- ph %d )\t\tch=%d                  (999)\n",prefix,thisIndex, myValue, tempo, posicion, posicionDer,phase,checkines);
+    CkPrintf("%s Merge[%d] =\t\t>>> v(%d) <<<\t\tt %d (p %d --- pd %d --- ph %d )                  (999)\n",prefix,thisIndex, myValue, tempo, posicion, posicionDer,phase);
     mainProxy.arrayDisplayFinished();
   }
 }
