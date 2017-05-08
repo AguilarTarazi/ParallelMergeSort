@@ -2,7 +2,7 @@ module merge {
 
   array [1D] Merge {
     entry Merge();
-    entry void initPhase(int,int,int,int val[numElements/2+1],int);
+    entry void initPhase(int,int,int,int val[numElements/2+1],int,int);
     entry void setPhase(int,int val[numElements/2+1],int);
     entry void setValues(int val[numElements/2+1],int);
     entry void startCompare(int,int,bool,int,int);

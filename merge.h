@@ -11,6 +11,7 @@ class Merge : public CBase_Merge {
   int *myValues;
   int *tempos;
   int numElementsLocal;
+  int comparar[15];
   /// Member Functions (private) ///
   void sort(int,int,int[]);
   void merging(int,int,int,int[]);
@@ -23,7 +24,7 @@ class Merge : public CBase_Merge {
   Merge(CkMigrateMessage *msg);
 
   /// Entry Methods ///
-  void initPhase(int,int,int,int[],int);
+  void initPhase(int,int,int,int[],int,int);
   void setPhase(int,int[],int);
   void setValues(int[],int);
   void startCompare(int,int,bool,int,int);

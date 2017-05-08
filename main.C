@@ -83,8 +83,8 @@ void Main::startNextPhase() {
 
     // Reciben como argumento el indice del "ultimo elemento de su array"
     inicio=CkWallTimer();	//Toma tiempo de inicio
-    mergeArray[0].initPhase(cantChares/2-1,cantChares-1,0,valuesIzq,numElements/2);
-    mergeArray[cantChares/2].initPhase(cantChares-1,-1,0,valuesDer,numElements-numElements/2);
+    mergeArray[0].initPhase(cantChares/2-1,cantChares-1,0,valuesIzq,numElements/2,cantChares/2);
+    mergeArray[cantChares/2].initPhase(cantChares-1,-1,0,valuesDer,numElements-numElements/2,-1);
 }
 
 void Main::startArrayDisplay(void (Main::*cbFunc)(void), char* prefix) {

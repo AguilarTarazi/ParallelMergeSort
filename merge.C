@@ -48,7 +48,7 @@ Merge::Merge() {
 // NOTE: This constructor does not need to appear in the ".ci" file
 Merge::Merge(CkMigrateMessage *msg) { }
 
-void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
+void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam, int proxIndex) {
 
 
     elementos = tam;
@@ -65,21 +65,23 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
     primero = thisIndex;
     phase = phaseN + 1;
     CkPrintf("[%d]initPhase con pos=%d, phase=%d, tam=%d\n",thisIndex,pos,phase,elementos);
-
+    if(posDer!=-1)
+      comparar[cantFases] = proxIndex;
     nuevaCantChares = pos-thisIndex+1;
     nuevaPos = nuevaCantChares/2-1+thisIndex;
     if(nuevaCantChares > 2){
             posicion = pos;
             posicionDer = posDer;
             CkPrintf("[%d]initPhase Divide con nuevaPos=%d, pos=%d, phase=%d, elementos/2=%d\n",thisIndex,nuevaPos,pos,phase,elementos/2);
-            thisProxy[thisIndex].initPhase(nuevaPos,pos,phase,valuesIzq,elementos/2);
+            thisProxy[thisIndex].initPhase(nuevaPos,pos,phase,valuesIzq,elementos/2,nuevaPos+1);
             CkPrintf("[%d]initPhase Divide con pos=%d, -1, phase=%d, elementos-elementos/2=%d\n",thisIndex,pos,phase,elementos-elementos/2);
-            thisProxy[nuevaPos+1].initPhase(pos,-1,phase,valuesDer,elementos-elementos/2);
+            thisProxy[nuevaPos+1].initPhase(pos,-1,phase,valuesDer,elementos-elementos/2,-1);
     }
     else{
             // Solo entran acá los hilos que deben estar activos e iniciar una comparación
             CkPrintf("[%d]initPhase ELSE con pos=%d, phase=%d, tam=%d\n",thisIndex,pos,phase,elementos);
             if(posDer!=-1){
+              // comparar[cantFases] = proxIndex;
               cantFases++;
             }
             if(thisIndex != pos){
@@ -105,7 +107,7 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
             myValues = (int *)malloc(sizeof(int)*(elementos));
             memcpy(myValues,values,(elementos)*sizeof(int));
             for(int i = 0; i < elementos; i++)
-              CkPrintf("[%d] valor[%d]=%d 999\n",thisIndex,i,myValues[i]);
+              CkPrintf("[%d] valor[%d]=%d\n",thisIndex,i,myValues[i]);
             // myValues = (int *)malloc(sizeof(int)*elementos);
             // memcpy(myValues,values,(elementos)*sizeof(int));        //Se copian los valores en variable local
 
@@ -118,10 +120,18 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
             }
 
             activo = true;
+            //   CkPrintf("[%d] comparar[%d]=%d\n",thisIndex,i,comparar[i]);
+              CkPrintf("[%d] comparar[",thisIndex);
+              for(int i = 0; i < cantFases; i++){
+                CkPrintf("%d ",comparar[i]);
+              }
+              CkPrintf("]\n");
+
             sort(0,elementos-1,myValues);
             CkPrintf("[%d]initPhase comienza con phase=%d, pos=%d, posDerSC1=%d\n",thisIndex,phase,pos,posDer);
             CkPrintf("[%d]initPhase comienza con phase=%d, posicion=%d, posicionDerSC2=%d\n",thisIndex,phase,posicion,posicionDer);
-            startCompare(thisIndex+1,indexSave, true, posicion, primero);
+            startCompare(comparar[cantFases-1],indexSave, true, posicion, primero);
+            // startCompare(thisIndex+1,indexSave, true, posicion, primero);
             //     phase--;
             //     sort(0,elementos-1,myValues);
             //     phase++;
@@ -166,8 +176,8 @@ void Merge::startComparePhase(int indexDer, int indexS, bool seMovioIndexDer, in
 
 void Merge::requestSwap(int phaseN, int valueN, int indexIzq,int lastValueN){
     CkPrintf("[%d]requestSwap (phase=%d)\n",thisIndex,phase);
-    if(myValues == NULL)  CkPrintf("[%d]requestSwap  ALERTA ************************************\n",thisIndex);
-    if((phase == phaseN || !activo) /*&& myValues != NULL*/){
+    if(myValues[0] == NULL)  CkPrintf("[%d]requestSwap  ALERTA ************************************\n",thisIndex);
+    if((phase == phaseN || !activo) /*&& myValues[0] != NULL*/){
         CkPrintf("[%d]requestSwap %d  <-CMP-> [%d] %d\n",thisIndex,myValues[0],indexIzq,lastValueN);
         if(lastValueN > myValues[0]){
             // phase = phaseN-1;
@@ -213,15 +223,15 @@ void Merge::check(int indexDer){
             if(indexLlamoIzq >= 0){
                 activo = false;
                 CkPrintf("[%d]check ---> Se desactivó en check Izq. Avisar a [%d] que me puede llamar.\n",thisIndex,indexLlamoIzq);
-                thisProxy[indexLlamoIzq].cambiarPosicion(thisIndex,false);
-                // thisProxy[indexLlamoIzq].startCompare(thisIndex,indexLlamoIzq,false);
+                // thisProxy[indexLlamoIzq].cambiarPosicion(thisIndex,false);
+                thisProxy[indexLlamoIzq].startCompare(thisIndex,indexLlamoIzq,false,posicion,primero);
                 indexLlamoIzq = -1;
             }
             else if(cantFases > 0){
                 // else if(posicionDer > 0 && activo){
                 CkPrintf("[%d]check ---> Comienza Siguiente Fase: %d.\n",thisIndex,phase);
-                cambiarPosicion(indexDer,true);
                 // cambiarPosicion(indexDer,true);
+                startCompare(comparar[cantFases-1],thisIndex,false,posicion,primero);
             }
             else{
                 CkPrintf("[%d]check ---> Se desactivó definitivamente.\n",thisIndex);
@@ -296,8 +306,8 @@ void Merge::cambiarPosicion(int indexDer, bool meLlamoYo){
     }
     else{
         CkPrintf("[%d]cambiarPosicion cambiarPosicion  posicion+1=%d < cantChares=%d\n",thisIndex,posicion+1,cantChares);
-        if(indexDer < cantChares)
-            startCompare(indexDer,thisIndex,false,posicion,primero);
+        // if(indexDer < cantChares)
+            // startCompare(indexDer,thisIndex,false,posicion,primero);
     }
 }
 
