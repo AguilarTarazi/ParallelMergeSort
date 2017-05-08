@@ -37,8 +37,8 @@ Main::Main(CkArgMsg* msg) {
     values = (int *)malloc(sizeof(int)*numElements);
     for(int i=0;i<numElements;i++){
         value = rand() % 100; //Aleatorio
-        value = i; //Ascendente
         value = numElements-i; //Descendente
+        value = i; //Ascendente
         values[i] = value;
         CkPrintf("Before: Merge[%d]: %d\n",i,values[i]);
     }

@@ -7,7 +7,7 @@ class Merge : public CBase_Merge {
   /// Member Variables (Object State) ///
   int myValue, nuevaPos, nuevaCantChares, phase, tempo, indexSave, posicion, posicionDer;
   int indexLlamoIzq, accion, primero, cantFases, elementos;
-  bool activo;
+  bool activo, llameYo;
   int *myValues;
   int *tempos;
   int numElementsLocal;
@@ -25,6 +25,7 @@ class Merge : public CBase_Merge {
   /// Entry Methods ///
   void initPhase(int,int,int,int[],int);
   void setPhase(int,int[],int);
+  void setValues(int[],int);
   void startCompare(int,int,bool,int,int);
   void startComparePhase(int,int,bool,int,int,int);
   void requestSwap(int,int,int,int);
