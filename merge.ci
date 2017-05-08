@@ -2,21 +2,24 @@ module merge {
 
   array [1D] Merge {
     entry Merge();
-    entry void initPhase(int,int,int);
-    entry void setPhase(int);
+    entry void initPhase(int,int,int,int val[numElements/2+1],int);
+    entry void setPhase(int,int val[numElements/2+1],int);
     entry void startCompare(int,int,bool,int,int);
     entry void startComparePhase(int,int,bool,int,int,int);
-    entry void requestSwap(int,int,int);
-    entry void acceptSwap(int,int);
+    entry void requestSwap(int,int,int,int);
+    entry void acceptSwap(int,int,int val[numElements],int);
     entry void cambiarPosicion(int,bool);
     entry void solicitarPosicionDer(int,int,int);
     entry void cambiarPosicionDer(int,int);
-    entry void denySwap(int,int);
-    entry void saveValue(int,bool);
-    entry void saveTempo(int,bool);
+    entry void denySwap(int,int,int val[numElements],int);
+    entry void saveValue(int val[numElements],int,bool);
+    //entry void saveTempo(int,int val[1024]);
     entry void check(int);
     entry void imprimir(char prefix[10]);
     entry void displayValue(int prefixLen, char prefix[prefixLen]);
+
+    //entry void compareData(int val[1024],int);
+
   };
 
 };

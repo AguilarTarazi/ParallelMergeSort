@@ -11,6 +11,9 @@ class Main : public CBase_Main {
   /// Member Variables (Object State) ///
   void (Main::*postDisplayFunc)(void);
   CProxy_Merge mergeArray;
+  float inicio,fin;
+  int *values;
+  int value;
 
   /// Private Member Functions ///
   void startArrayDisplay(void (Main::*cbFunc)(void), char* prefix);
@@ -24,7 +27,7 @@ class Main : public CBase_Main {
 
   /// Entry Methods ///
   void arrayDisplayFinished();
-  void terminar();
+  void terminar(int []);
 };
 
 

@@ -2,13 +2,14 @@ mainmodule main {
 
   readonly CProxy_Main mainProxy;
   readonly int numElements;
+  readonly int cantChares;
 
   extern module merge;
 
   mainchare Main {
     entry Main(CkArgMsg* msg);
     entry void arrayDisplayFinished();
-    entry void terminar();
+    entry void terminar(int values[numElements]);
   };
 
   initproc void processorStartupFunc();
