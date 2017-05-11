@@ -69,8 +69,8 @@ void Main::startNextPhase() {
     // Comienzan su fase (divide) solo el primero y el del medio.
     int *valuesIzq = (int *)malloc(sizeof(int)*(numElements/2));
     int *valuesDer = (int *)malloc(sizeof(int)*(numElements-numElements/2));
-    CkPrintf("TAM IZQ en MAIN 2: %d\n", sizeof valuesIzq);
-    CkPrintf("TAM DER en MAIN 2: %d\n", sizeof valuesDer);
+    // CkPrintf("TAM IZQ en MAIN 2: %d\n", sizeof valuesIzq);
+    // CkPrintf("TAM DER en MAIN 2: %d\n", sizeof valuesDer);
 
     memcpy(valuesIzq,values,(numElements/2)*sizeof(int));
     memcpy(valuesDer,values+numElements/2,(numElements-numElements/2)*sizeof(int));
@@ -82,9 +82,9 @@ void Main::startNextPhase() {
     //     CkPrintf("valuesDer[%d]=%d\n",j,valuesDer[j]);
 
     // Reciben como argumento el indice del "ultimo elemento de su array"
-    inicio=CkWallTimer();	//Toma tiempo de inicio
-    mergeArray[0].initPhase(cantChares/2-1,cantChares-1,0,valuesIzq,numElements/2,cantChares/2);
-    mergeArray[cantChares/2].initPhase(cantChares-1,-1,0,valuesDer,numElements-numElements/2,-1);
+    inicio = CkWallTimer();	//Toma tiempo de inicio
+    mergeArray[0].initPhase(cantChares/2-1,cantChares-1,0,valuesIzq,numElements/2);
+    mergeArray[cantChares/2].initPhase(cantChares-1,-1,0,valuesDer,numElements-numElements/2);
 }
 
 void Main::startArrayDisplay(void (Main::*cbFunc)(void), char* prefix) {
