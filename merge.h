@@ -5,14 +5,9 @@ class Merge : public CBase_Merge {
 
  private:
   /// Member Variables (Object State) ///
-  int myValue, nuevaPos, nuevaCantChares, phase, tempo, indexSave, posicion, posicionDer;
-  int indexLlamoIzq, accion, primero, cantFases, elementos;
-  bool activo, llameYo, yaActualizoPosicion;
+  int nuevaPos, nuevaCantChares, phase, posicionAnterior, posicion, posicionDer, indexLlamoIzq, cantFases, elementos;
+  bool activo, yaActualizoPosicion;
   int *myValues;
-  int *tempos;
-  int numElementsLocal;
-  int comparar[15];
-  int posicionAnterior;
   /// Member Functions (private) ///
   void sort(int,int,int[]);
   void merging(int,int,int,int[]);
@@ -27,23 +22,15 @@ class Merge : public CBase_Merge {
   /// Entry Methods ///
   void initPhase(int,int,int,int[],int);
   void setPhase(int,int[],int);
-  void setValues(int[],int);
-  void startCompare(int,int,bool,int,int);
-  void startComparePhase(int,int,bool,int,int,int);
-  void requestSwap(int,int,int,int);
-  void acceptSwap(int,int,int [],int);
-  void reiniciar(int,bool);
-  void solicitarPosicion(int,int,int);
-  void cambiarPosicionDer(int,int);
-  void denySwap(int,int,int [],int);
+  void startCompare(int,int);
+  void requestSwap(int,int,int);
   void saveValue(int [],int,bool);
-  // void saveTempo(int,int []);
-  void check(int);
+  void check();
+  void reiniciar(bool);
+  void solicitarPosicion(int,int);
+  void cambiarPosicionDer(int);
   void imprimir(char prefix[10]);
   void displayValue(int prefixLen, char* prefix);
-
-  //void compareData(int [],int);
-
 };
 
 

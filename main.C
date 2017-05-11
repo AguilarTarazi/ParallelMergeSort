@@ -40,7 +40,7 @@ Main::Main(CkArgMsg* msg) {
         value = numElements-i; //Descendente
         value = i; //Ascendente
         values[i] = value;
-        CkPrintf("Before: Merge[%d]: %d\n",i,values[i]);
+        // CkPrintf("Before: Merge[%d]: %d\n",i,values[i]);
     }
     // We are done with msg so delete it.
     delete msg;
@@ -83,8 +83,11 @@ void Main::startNextPhase() {
 
     // Reciben como argumento el indice del "ultimo elemento de su array"
     inicio = CkWallTimer();	//Toma tiempo de inicio
+    free(values);
     mergeArray[0].initPhase(cantChares/2-1,cantChares-1,0,valuesIzq,numElements/2);
     mergeArray[cantChares/2].initPhase(cantChares-1,-1,0,valuesDer,numElements-numElements/2);
+    free(valuesIzq);
+    free(valuesDer);
 }
 
 void Main::startArrayDisplay(void (Main::*cbFunc)(void), char* prefix) {
@@ -97,7 +100,6 @@ void Main::startArrayDisplay(void (Main::*cbFunc)(void), char* prefix) {
 void Main::terminar(int valuesSort[]) {
 
     fin=CkWallTimer();		//Toma tiempo de fin
-    // char str[15] = "After ";
     for(int i=0;i<numElements;i++){
         CkPrintf("After: Merge[%d]=%d\n",i,valuesSort[i]);
     }
