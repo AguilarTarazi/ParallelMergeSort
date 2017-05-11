@@ -74,9 +74,10 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
     }
     nuevaCantChares = pos-thisIndex+1;
     nuevaPos = nuevaCantChares/2-1+thisIndex;
-    if(nuevaCantChares > 1){
+    if(nuevaCantChares > 1 || phase == 1){
       posicion = pos;
       posicionDer = posDer;
+      CkPrintf("[%d]initPhase SE CAMBIO POSICIONES pos=%d, posDer=%d, posicion=%d, posicionDer=%d, phase=%d, cantFases=%d, tam=%d, elementos=%d\n",thisIndex,pos,posDer,posicion,posicionDer,phase,cantFases,tam,elementos);
     }
     if(nuevaCantChares > 2){
             // posicion = pos;
@@ -88,7 +89,7 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
     }
     else{
             // Solo entran acá los hilos que deben estar activos e iniciar una comparación
-            CkPrintf("[%d]initPhase ELSE con pos=%d, phase=%d, tam=%d\n",thisIndex,pos,phase,elementos);
+            CkPrintf("[%d]initPhase ELSE0 con pos=%d, posDer=%d, posicion=%d, posicionDer=%d, phase=%d, cantFases=%d, tam=%d, elementos=%d\n",thisIndex,pos,posDer,posicion,posicionDer,phase,cantFases,tam,elementos);
             // if(posDer!=-1){
             //   CkPrintf("[%d]initPhase ELSE IF1 con pos=%d, phase=%d, tam=%d\n",thisIndex,pos,phase,elementos);
             //   cantFases++;
@@ -119,6 +120,7 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
             if(nuevaCantChares > 1){
                 CkPrintf("[%d]initPhase ELSE IF3 setPhase con pos=%d, phase=%d, tam=%d, elementos=%d\n",thisIndex,pos,phase,tam,elementos);
                 thisProxy[thisIndex+1].setPhase(phase,valuesDer,elementos-elementos/2);
+                elementos = elementos/2;
             }else{
                 CkPrintf("[%d]initPhase ELSE IF4 setPhase con pos=%d, phase=%d, tam=%d, elementos=%d\n",thisIndex,pos,phase,tam,elementos);
                 // thisProxy[thisIndex+1].setValues(valuesDer,elementos-elementos/2);
@@ -133,7 +135,7 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
             phase++;
             CkPrintf("[%d]initPhase comienza con phase=%d, pos=%d, posDer=%d, posicion=%d, posicionDer=%d\n",thisIndex,phase,pos,posDer,posicion,posicionDer);
             for(int i = 0; i < elementos; i++)
-              CkPrintf("[%d]initPhase valor[%d]=%d\n",thisIndex,i,myValues[i]);
+              CkPrintf("[%d]initPhase valorX[%d]=%d\n",thisIndex,i,myValues[i]);
             startCompare(thisIndex+1,indexSave, true, posicion, primero);
     }
 }
@@ -148,15 +150,15 @@ void Merge::setValues(int values[], int tam){
 }
 
 void Merge::setPhase(int phaseN, int values[], int tam){
+    // CkPrintf("[%d]initPhase ELSE0 con pos=%d, posDer=%d, posicion=%d, posicionDer=%d, phase=%d, cantFases=%d, tam=%d, elementos=%d\n",thisIndex,pos,posDer,posicion,posicionDer,phase,cantFases,tam,elementos);
     // activo = false;         // VER SI VA, no haria falta, por el true del init y el false del constructor
     phase = phaseN;
     elementos = tam;
-    myValues = (int *)malloc(sizeof(int)*(elementos-elementos/2));
-    memcpy(myValues,values+elementos/2,(elementos-elementos/2)*sizeof(int));
+    CkPrintf("[%d]setPhase tam=%d, memoria=%d\n",thisIndex,tam,(elementos));
+    myValues = (int *)malloc(sizeof(int)*(elementos));
+    memcpy(myValues,values,(elementos)*sizeof(int));
     for(int i = 0; i < elementos; i++)
     CkPrintf("[%d]setPhase >valor[%d]=%d\n",thisIndex,i,myValues[i]);
-    // myValues = (int *)malloc(sizeof(int)*tam);
-    // memcpy(myValues,values,(tam)*sizeof(int));        //Se copian los valores en variable local
 }
 
 void Merge::startCompare(int indexDer, int indexS, bool seMovioIndexDer, int posicionN, int primeroN){
@@ -292,9 +294,9 @@ void Merge::denySwap(int value, int indexDer,int valuesN[], int elementosN){
 
 void Merge::reiniciar(int indexDer, bool meLlamoYo){
     CkPrintf("\n\n\n[%d]>cambiarPosicion ;;;;;;;;;;;;;;;;;;;;;;;; \n",thisIndex);
-    CkPrintf("\n\n\n[%d]> \n",thisIndex);
-    CkPrintf("\n\n\n[%d]> \n",thisIndex);
-    CkPrintf("\n\n\n[%d]> \n",thisIndex);
+    CkPrintf("[%d]>",thisIndex);
+    CkPrintf("[%d]>",thisIndex);
+    CkPrintf("[%d]>",thisIndex);
     if(meLlamoYo){
         llameYo = true;
         CkPrintf("[%d]cambiarPosicion Cambia su posicion de %d a %d\n",thisIndex,posicion,posicionDer);
