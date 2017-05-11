@@ -106,13 +106,13 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
             //   // posicion = posicionDer;
             //   posicionDer = posicion+1;
             // }
-            if(elementos > 1)
-              elementos = elementos/2;
+            // if(elementos > 1)
+            //   elementos = elementos/2;
             // CkPrintf("[%d]setValues tam=%d\n",thisIndex,elementos);
             myValues = (int *)malloc(sizeof(int)*(elementos));
             memcpy(myValues,values,(elementos)*sizeof(int));
-            for(int i = 0; i < elementos; i++)
-              CkPrintf("[%d] valor[%d]=%d\n",thisIndex,i,myValues[i]);
+            // for(int i = 0; i < elementos; i++)
+            //   CkPrintf("[%d]initPhase valor[%d]=%d\n",thisIndex,i,myValues[i]);
             // myValues = (int *)malloc(sizeof(int)*elementos);
             // memcpy(myValues,values,(elementos)*sizeof(int));        //Se copian los valores en variable local
 
@@ -128,13 +128,12 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int values[],int tam) {
             }
 
             activo = true;
-            sort(0,elementos-1,myValues);
-            CkPrintf("[%d]initPhase comienza con phase=%d, pos=%d, posDerSC1=%d\n",thisIndex,phase,pos,posDer);
-            CkPrintf("[%d]initPhase comienza con phase=%d, posicion=%d, posicionDerSC2=%d\n",thisIndex,phase,posicion,posicionDer);
-            // if(thisIndex == 5) cantFases++;
             phase--;
             sort(0,elementos-1,myValues);
             phase++;
+            CkPrintf("[%d]initPhase comienza con phase=%d, pos=%d, posDer=%d, posicion=%d, posicionDer=%d\n",thisIndex,phase,pos,posDer,posicion,posicionDer);
+            for(int i = 0; i < elementos; i++)
+              CkPrintf("[%d]initPhase valor[%d]=%d\n",thisIndex,i,myValues[i]);
             startCompare(thisIndex+1,indexSave, true, posicion, primero);
     }
 }
@@ -145,7 +144,7 @@ void Merge::setValues(int values[], int tam){
     myValues = (int *)malloc(sizeof(int)*(elementos-elementos/2));
     memcpy(myValues,values+elementos/2,(elementos-elementos/2)*sizeof(int));
     for(int i = 0; i < elementos; i++)
-    CkPrintf("[%d] >valor[%d]=%d\n",thisIndex,i,myValues[i]);
+    CkPrintf("[%d]setValues >valor[%d]=%d\n",thisIndex,i,myValues[i]);
 }
 
 void Merge::setPhase(int phaseN, int values[], int tam){
@@ -155,7 +154,7 @@ void Merge::setPhase(int phaseN, int values[], int tam){
     myValues = (int *)malloc(sizeof(int)*(elementos-elementos/2));
     memcpy(myValues,values+elementos/2,(elementos-elementos/2)*sizeof(int));
     for(int i = 0; i < elementos; i++)
-    CkPrintf("[%d] >valor[%d]=%d\n",thisIndex,i,myValues[i]);
+    CkPrintf("[%d]setPhase >valor[%d]=%d\n",thisIndex,i,myValues[i]);
     // myValues = (int *)malloc(sizeof(int)*tam);
     // memcpy(myValues,values,(tam)*sizeof(int));        //Se copian los valores en variable local
 }
@@ -178,7 +177,8 @@ void Merge::startComparePhase(int indexDer, int indexS, bool seMovioIndexDer, in
 void Merge::requestSwap(int phaseN, int valueN, int indexIzq,int lastValueN){
     CkPrintf("[%d]requestSwap (phase=%d)\n",thisIndex,phase);
     if(myValues == NULL)  CkPrintf("[%d]requestSwap  ALERTA ************************************\n",thisIndex);
-    if((phase == phaseN || !activo) /*&& myValues != NULL*/){
+    if((phase == phaseN || !activo) && myValues != NULL){
+    // if((phase == phaseN || !activo) /*&& myValues != NULL*/){
         CkPrintf("[%d]requestSwap %d  <-CMP-> [%d] %d\n",thisIndex,myValues[0],indexIzq,lastValueN);
         if(lastValueN > myValues[0]){
             // phase = phaseN-1;
