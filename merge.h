@@ -24,7 +24,7 @@ class Merge : public CBase_Merge {
   void setPhase(int,int[],int);
   void startCompare(int,int);
   void requestSwap(int,int,int);
-  void saveValue(int [],int,bool);
+  void saveValue(int[],int numElements,bool);
   void check();
   void reiniciar(bool);
   void solicitarPosicion(int,int);

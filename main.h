@@ -27,7 +27,7 @@ class Main : public CBase_Main {
 
   /// Entry Methods ///
   void arrayDisplayFinished();
-  void terminar(int []);
+  void terminar(int, int []);
 };
 
 

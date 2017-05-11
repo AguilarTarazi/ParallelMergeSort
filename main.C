@@ -36,12 +36,13 @@ Main::Main(CkArgMsg* msg) {
     CkPrintf("\nCANTIDAD DE CHARES: %d\nCANTIDAD DE ELEMENTOS: %d\n",cantChares,numElements);
     values = (int *)malloc(sizeof(int)*numElements);
     for(int i=0;i<numElements;i++){
+        // value = numElements-i; //Descendente
+        // value = i; //Ascendente
         value = rand() % 100; //Aleatorio
-        value = numElements-i; //Descendente
-        value = i; //Ascendente
         values[i] = value;
-        // CkPrintf("Before: Merge[%d]: %d\n",i,values[i]);
     }
+    for(int i=numElements-10;i<numElements;i++)
+      CkPrintf("Before: Merge[%d]: %d\n",i,values[i]);
     // We are done with msg so delete it.
     delete msg;
 
@@ -56,7 +57,6 @@ Main::Main(CkArgMsg* msg) {
     // Display the array and then start the first phase
     // mergeArray.displayValue(7,str);
     // arrayDisplayFinished();
-    // char str[15] = "Before";
     // startArrayDisplay(&Main::startNextPhase, str);
     startNextPhase();
 }
@@ -97,14 +97,19 @@ void Main::startArrayDisplay(void (Main::*cbFunc)(void), char* prefix) {
     mergeArray[0].displayValue(strlen(prefix)+1, prefix);
 }
 
-void Main::terminar(int valuesSort[]) {
+void Main::terminar(int n, int valuesSort[]) {
 
     fin=CkWallTimer();		//Toma tiempo de fin
-    for(int i=0;i<numElements;i++){
+    // for(int i=0;i<n;i++){
+    for(int i=n-10;i<n;i++){
         CkPrintf("After: Merge[%d]=%d\n",i,valuesSort[i]);
     }
     // Exit the program
-    CkPrintf("\nTiempo: %f\n\n",fin-inicio);	//Imprime tiempos
+    CkPrintf("\n=============================================================================================");
+    CkPrintf("\n\t\t\t\t >>> Tiempo: %f <<<",fin-inicio);	//Imprime tiempos
+    CkPrintf("\n=============================================================================================");
+    CkPrintf("\n==================================== FIN DEL PROGRAMA =======================================");
+    CkPrintf("\n=============================================================================================\n");
     CkExit();
 }
 
@@ -125,7 +130,7 @@ void Main::exit() {
 //   it is being used to seed the random number generator on each processor.
 void processorStartupFunc() {
     // Seed rand() with a different value for each processor
-    srand(time(NULL) + CkMyPe());
+    srand(time(NULL));// + CkMyPe());
 }
 
 #include "main.def.h"
