@@ -11,11 +11,12 @@ class Main : public CBase_Main {
   /// Member Variables (Object State) ///
   void (Main::*postDisplayFunc)(void);
   CProxy_Merge mergeArray;
+  float inicio,fin,start,stop;
+  int *values;
+  int value,cantCheck;
 
   /// Private Member Functions ///
-  void startArrayDisplay(void (Main::*cbFunc)(void), char* prefix);
   void startNextPhase();
-  void exit();
 
  public:
   /// Constructors ///
@@ -23,8 +24,9 @@ class Main : public CBase_Main {
   Main(CkMigrateMessage* msg);
 
   /// Entry Methods ///
-  void arrayDisplayFinished();
-  void terminar();
+  void terminar(int,int []);
+  void barrier();
+  // void enviarCb(CkCallbackResumeThread &);
 };
 
 

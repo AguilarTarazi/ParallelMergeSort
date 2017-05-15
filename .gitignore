@@ -1,0 +1,9 @@
+*.log.gz
+*.projrc
+*.sts
+*.topo
+mergeSecuencial
+charmrun
+*.decl.h
+*.def.h
+*.o

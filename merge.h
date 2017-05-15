@@ -5,33 +5,28 @@ class Merge : public CBase_Merge {
 
  private:
   /// Member Variables (Object State) ///
-  int myValue, newPos, newNumElements, phase, tempo, indexSave, posicion, posicionDer;
-  int indexLlamoIzq, accion, primero, cantFases;
+  int newPos, newcantChares, phase;
+  int indexLlamoIzq, cantFases, elementos;
   bool activo;
+  int *myValues;
+  int comparar[30];
   /// Member Functions (private) ///
+  void sort(int,int);
+  void merging(int,int,int);
+  void bubbleSort(int);
+  void insertionSort();
 
  public:
   /// Constructors ///
   Merge();
   Merge(CkMigrateMessage *msg);
-
   /// Entry Methods ///
-  void initPhase(int,int,int);
-  void setPhase(int);
-  void startCompare(int,int,bool,int,int);
-  void startComparePhase(int,int,bool,int,int,int);
+  void initPhase(int,int,int,int,int[],int);
+  void startCompare(int);
   void requestSwap(int,int,int);
-  void acceptSwap(int,int);
-  void cambiarPosicion(int,bool);
-  void solicitarPosicionDer(int,int,int);
-  void cambiarPosicionDer(int,int);
-  void denySwap(int,int);
-  void saveValue(int,bool);
-  void saveTempo(int,bool);
-  void check(int);
-  void imprimir(char prefix[10]);
-  void displayValue(int prefixLen, char* prefix);
+  void saveValue(int [],int,bool);
+  void check();
+  void listo();
 };
-
 
 #endif //__MERGE_H__
