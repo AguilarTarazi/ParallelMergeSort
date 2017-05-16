@@ -2,57 +2,57 @@
 #include <omp.h>
 #include <stdlib.h>
 
-#define VECLEN 1000000
+#define VECLEN 100000000
 
 int a[VECLEN];
 int ndv;
 
-void SeqSort(int *A, int size) {
+void SeqSort(int size) {
   int i,j,tmp,posmin;
   for(i=0;i<size;i++){
-    //      printf("en seq %d %d ",i,*(A+i));
+    //      printf("en seq %d %d ",i,*(a+i));
 
     posmin=i;
     for(j=i+1;j<size;j++){
-      if (*(A+j) < *(A+posmin)){
-        //            printf("%d %d %d %d ",j,posmin,*(A+j),*(A+posmin));
+      if (*(a+j) < *(a+posmin)){
+        //            printf("%d %d %d %d ",j,posmin,*(a+j),*(a+posmin));
         posmin=j;
       }
     }
     //swap
-    tmp=*(A+i);
-    *(A+i)=*(A+posmin);
-    *(A+posmin)=tmp;
-    //      printf("\n%d %d %d %d\n",i,posmin,*(A+i),tmp);
+    tmp=*(a+i);
+    *(a+i)=*(a+posmin);
+    *(a+posmin)=tmp;
+    //      printf("\n%d %d %d %d\n",i,posmin,*(a+i),tmp);
   }
 }
 
-void Merge(int *A, int *B, int half, int size,int stg) {
+void Merge(int *B, int half, int size,int stg) {
   int i,ia,ib;
   int tmp[size];
   ia=0;
   ib=half;
   for (i=0;i<half;i++)
-  tmp[i]=A[i];
+  tmp[i]=a[i];
   for (i=0;i<size-half;i++)
   tmp[half+i]=B[i];
   int *dato;
   //printf("entro en merge con %d %d\n",size,stg);
   for (i=0;i<size;i++){
-    //      printf("%d %d\n",*(A+ia),*(B+ib));
+    //      printf("%d %d\n",*(a+ia),*(B+ib));
     if (ia>=half){
-      *(A+i)=*(tmp+ib);
+      *(a+i)=*(tmp+ib);
       ib++;
     } else {
       if (ib>=size){
-        *(A+i)=*(tmp+ia);
+        *(a+i)=*(tmp+ia);
         ia++;
       } else {
         if ((*(tmp+ia)) < (*(tmp+ib))){
-          *(A+i)=*(tmp+ia);
+          *(a+i)=*(tmp+ia);
           ia++;
         } else {
-          *(A+i)=*(tmp+ib);
+          *(a+i)=*(tmp+ib);
           ib++;
         }
       }
@@ -60,26 +60,26 @@ void Merge(int *A, int *B, int half, int size,int stg) {
   }
 }
 
-void Sort(int *A, int size, int stg) {
+void Sort(int size, int stg) {
   int half = size/2;
-  int *B = A + half;
+  int *B = a + half;
   int thid;
   // thid=omp_get_thread_num();
   // printf("estoy en sort de hilo %d %d %d\n",thid,stg,ndv);
 
   if ( size<ndv ) {
-    SeqSort (A,  size ) ;
+    SeqSort (size);
   } else {
-    #pragma omp task firstprivate (A,half,stg)
+    #pragma omp task firstprivate (half,stg)
     {
-      Sort (A, half, stg+1 ) ;
+      Sort (half, stg+1 ) ;
     }
     #pragma omp task firstprivate (B,half,size,stg)
     {
-      Sort (B, size-half, stg+1);
+      Sort (size-half, stg+1);
     }
     #pragma omp taskwait
-    Merge (A, B, half, size, stg ) ;
+    Merge (B, half, size, stg ) ;
   }
 }
 
@@ -106,7 +106,7 @@ int main (int argc, char *argv[]) {
   #pragma omp parallel
   {
     #pragma omp single
-    Sort(a,VECLEN,1);
+    Sort(VECLEN,1);
   }
   tfin=omp_get_wtime();
 

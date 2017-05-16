@@ -2,9 +2,12 @@
 *.projrc
 *.sts
 *.topo
+merge
 mergeSecuencial
 charmrun
 *.decl.h
 *.def.h
 *.o
 /openmp/pmerge
+/openmp/pmergev2
+/openmp/pmergev2.c
