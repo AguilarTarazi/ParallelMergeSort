@@ -7,3 +7,4 @@ charmrun
 *.decl.h
 *.def.h
 *.o
+/openmp/pmerge
