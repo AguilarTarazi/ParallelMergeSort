@@ -35,7 +35,7 @@ Main::Main(CkArgMsg* msg) {
         CkPrintf("Usar 'name (cantChares) (numElements)'\n");
         CkExit();
     }
-    CkPrintf("\nCANTIDAD DE CHARES: %d\nCANTIDAD DE ELEMENTOS CHARE: %d\n",cantChares,numElements);
+    CkPrintf("\nCANTIDAD DE CHARES: %d\nCANTIDAD DE ELEMENTOS: %d\n",cantChares,numElements);
     values = (int *)malloc(numElements*sizeof(int));
     if(values == NULL){
         CkPrintf("values es NULL\n");
@@ -102,8 +102,9 @@ void Main::terminar(int tam, int valuesSort[]) {
     //     CkPrintf("After: Merge[%d]=%d\n",i,valuesSort[i]);
     // }
     // Exit the program
-    CkPrintf("\nTIEMPO DE CALCULO: %f",fin-inicio);	//Imprime tiempos
-    CkPrintf("\nTIEMPO DE EJECUCION: %f\n\n",stop-start);	//Imprime tiempos
+    CkPrintf("\n========================================");	//Imprime tiempos
+    CkPrintf("\nTIEMPO DE CALCULO: %f\n",fin-inicio);	//Imprime tiempos
+    // CkPrintf("\nTIEMPO DE EJECUCION: %f\n\n",stop-start);	//Imprime tiempos
     CkExit();
 }
 

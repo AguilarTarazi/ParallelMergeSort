@@ -52,9 +52,10 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int tam,int values[],int 
         }
         memcpy(myValues,values,(elementos)*sizeof(int));        //Se copian los valores en variable local
         sort(0,elementos-1);
-        mainProxy.barrier();
+        // mainProxy.barrier();
         if(posDer!=-1){
             activo = true;
+            startCompare(comparar[cantFases-1]);
         }
     }
     else{
@@ -132,9 +133,9 @@ void Merge::check(){
     else{
         if(thisIndex==0){
             mainProxy.terminar(elementos,myValues);
-            CkPrintf("\n=============================================================================================\n");
-            CkPrintf("====================================== FIN DEL PROGRAMA =====================================\n");
-            CkPrintf("=============================================================================================\n");
+            // CkPrintf("\n=============================================================================================\n");
+            // CkPrintf("====================================== FIN DEL PROGRAMA =====================================\n");
+            // CkPrintf("=============================================================================================\n");
         }
 	    activo = false;
     }
