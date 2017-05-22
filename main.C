@@ -61,7 +61,115 @@ Main::Main(CkArgMsg* msg) {
 
     // Create the array of Merge chare objects.
     // CkPrintf("HELLO\n");
-    mergeArray = CProxy_Merge::ckNew(cantChares);
+    mergeArray = CProxy_Merge::ckNew();
+
+    // cat /proc/cpuinfo | grep -E "processor|core id|physical id"
+    if(CmiNumPes() == 32 ){
+        CkPrintf("Modo de Asignación: Manual para 32 hilos.\n");
+        mergeArray[0].insert(0);
+        mergeArray[16].insert(1);
+
+        mergeArray[8].insert(4);
+        mergeArray[12].insert(5);
+
+        mergeArray[24].insert(2);
+        mergeArray[28].insert(3);
+
+        mergeArray[20].insert(6);
+        mergeArray[4].insert(7);
+        // 
+        // mergeArray[20].insert(6);
+        // mergeArray[4].insert(7);
+        //
+        // mergeArray[20].insert(6);
+        // mergeArray[4].insert(7);
+        //
+        // mergeArray[20].insert(6);
+        // mergeArray[4].insert(7);
+        //
+        // mergeArray[20].insert(6);
+        // mergeArray[4].insert(7);
+        //
+        // mergeArray[20].insert(6);
+        // mergeArray[4].insert(7);
+        //
+        // mergeArray[20].insert(6);
+        // mergeArray[4].insert(7);
+        //
+        // mergeArray[20].insert(6);
+        // mergeArray[4].insert(7);
+        //
+        // mergeArray[20].insert(6);
+        // mergeArray[4].insert(7);
+        int RR = 1;
+        for (int i = 0; i < cantChares; i++){
+          if(i != 0 && i != 16 && i != 8 && i != 12 && i != 24 && i != 28 && i != 20 && i != 4)
+              if(RR < CmiNumPes()){
+                while(RR == 0 || RR == 4 || RR == 1 || RR == 5 || RR == 2 || RR == 6 || RR == 3 || RR == 7 )
+                  RR++;
+                mergeArray[i].insert(RR++);
+                CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
+              }
+              // Para cuando hay mas chares que procesadores
+              else{
+                RR = 5;
+                mergeArray[i].insert(RR++);
+                CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
+              }
+          else
+            CkPrintf("Chare %d agregado *\n",i);
+        }
+        mergeArray.doneInserting();
+    }
+    else{
+      CkPrintf("Modo de Asignación: Automática.\n");
+      mergeArray = CProxy_Merge::ckNew(cantChares);
+    }
+
+    CkPrintf("Fin de Asignación.\n");
+
+    // mergeArray[0].insert(0);
+    // mergeArray[10].insert(1);
+    // mergeArray[20].insert(2);
+    // mergeArray[30].insert(3);
+    // mergeArray[15].insert(4);
+    // mergeArray[25].insert(5);
+    // mergeArray[35].insert(6);
+    // int RR = 7;
+    // for (int i = 0; i < cantChares; i++){
+    //   if(i != 0 && i != 10 && i != 20 && i != 30 && i != 15 && i != 25 && i != 35)
+    //     if(RR < CmiNumPes()){
+    //       mergeArray[i].insert(RR++);
+    //       CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
+    //     }
+    //     else{
+    //       RR = 1;
+    //       mergeArray[i].insert(RR++);
+    //       CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
+    //     }
+    //   else
+    //     CkPrintf("Chare %d agregado al procesador %d *\n",i,0);
+    // }
+
+    // int posIzq = 0;
+    // int posDer = cantChares/2;
+    // mergeArray[posIzq].insert(0);
+    // mergeArray[posDer].insert(0);
+    // int RR = 1;
+    // for (int i = 0; i < cantChares; i++){
+    //   if(i != posIzq && i != posDer)
+    //     if(RR < CmiNumPes()){
+    //       mergeArray[i].insert(RR++);
+    //       CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
+    //     }
+    //     else{
+    //       RR = 0;
+    //       mergeArray[i].insert(RR++);
+    //       CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
+    //     }
+    //   else
+    //     CkPrintf("Chare %d agregado al procesador %d *\n",i,0);
+    // }
 
     startNextPhase();
 }
@@ -103,7 +211,10 @@ void Main::terminar(int tam, int valuesSort[]) {
     // }
     // Exit the program
     CkPrintf("\n========================================");	//Imprime tiempos
+    CkPrintf("\n========================================");	//Imprime tiempos
     CkPrintf("\nTIEMPO DE CALCULO: %f\n",fin-inicio);	//Imprime tiempos
+    CkPrintf("\n========================================");	//Imprime tiempos
+    CkPrintf("\n========================================");	//Imprime tiempos
     // CkPrintf("\nTIEMPO DE EJECUCION: %f\n\n",stop-start);	//Imprime tiempos
     CkExit();
 }
