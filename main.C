@@ -66,10 +66,11 @@ Main::Main(CkArgMsg* msg) {
     // cat /proc/cpuinfo | grep -E "processor|core id|physical id"
     if(CmiNumPes() == 32 ){
         CkPrintf("Modo de Asignación: Manual para 32 hilos.\n");
+        //Asignacion sobre physical 0
         mergeArray[0].insert(0);
-        mergeArray[16].insert(1);
+        mergeArray[16].insert(4);
 
-        mergeArray[8].insert(4);
+        mergeArray[8].insert(1);
         mergeArray[12].insert(5);
 
         mergeArray[24].insert(2);
@@ -77,48 +78,141 @@ Main::Main(CkArgMsg* msg) {
 
         mergeArray[20].insert(6);
         mergeArray[4].insert(7);
-        // 
-        // mergeArray[20].insert(6);
-        // mergeArray[4].insert(7);
-        //
-        // mergeArray[20].insert(6);
-        // mergeArray[4].insert(7);
-        //
-        // mergeArray[20].insert(6);
-        // mergeArray[4].insert(7);
-        //
-        // mergeArray[20].insert(6);
-        // mergeArray[4].insert(7);
-        //
-        // mergeArray[20].insert(6);
-        // mergeArray[4].insert(7);
-        //
-        // mergeArray[20].insert(6);
-        // mergeArray[4].insert(7);
-        //
-        // mergeArray[20].insert(6);
-        // mergeArray[4].insert(7);
-        //
-        // mergeArray[20].insert(6);
-        // mergeArray[4].insert(7);
-        int RR = 1;
+
+        int RR = 8;
         for (int i = 0; i < cantChares; i++){
           if(i != 0 && i != 16 && i != 8 && i != 12 && i != 24 && i != 28 && i != 20 && i != 4)
               if(RR < CmiNumPes()){
-                while(RR == 0 || RR == 4 || RR == 1 || RR == 5 || RR == 2 || RR == 6 || RR == 3 || RR == 7 )
-                  RR++;
+                // while(RR == 0 || RR == 4 || RR == 1 || RR == 5 || RR == 2 || RR == 6 || RR == 3 || RR == 7 )
+                // while(RR < 8 || RR > 15)
+                //   RR++;
+                // if(RR == 8)
+                  // RR = 16;
                 mergeArray[i].insert(RR++);
                 CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
               }
               // Para cuando hay mas chares que procesadores
               else{
-                RR = 5;
+                RR = 0;
                 mergeArray[i].insert(RR++);
-                CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
+                CkPrintf("Chare %d agregado al procesador %d. +\n",i,RR-1);
               }
           else
             CkPrintf("Chare %d agregado *\n",i);
         }
+
+        //Asignacion sobre physical 1
+        // mergeArray[0].insert(8);
+        // mergeArray[16].insert(9);
+        //
+        // mergeArray[8].insert(12);
+        // mergeArray[12].insert(13);
+        //
+        // mergeArray[24].insert(10);
+        // mergeArray[28].insert(11);
+        //
+        // mergeArray[20].insert(14);
+        // mergeArray[4].insert(15);
+
+
+        // int RR = 0;
+        // for (int i = 0; i < cantChares; i++){
+        //   if(i != 0 && i != 16 && i != 8 && i != 12 && i != 24 && i != 28 && i != 20 && i != 4)
+        //       if(RR < CmiNumPes()){
+        //         // while(RR == 0 || RR == 4 || RR == 1 || RR == 5 || RR == 2 || RR == 6 || RR == 3 || RR == 7 )
+        //         // while(RR < 8 || RR > 15)
+        //         //   RR++;
+        //         if(RR == 8)
+        //           RR = 16;
+        //         mergeArray[i].insert(RR++);
+        //         CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
+        //       }
+        //       // Para cuando hay mas chares que procesadores
+        //       else{
+        //         RR = 0;
+        //         mergeArray[i].insert(RR++);
+        //         CkPrintf("Chare %d agregado al procesador %d. +\n",i,RR-1);
+        //       }
+        //   else
+        //     CkPrintf("Chare %d agregado *\n",i);
+        // }
+
+        // // Asignacion completa1 mismo physical
+        // mergeArray[0].insert(1);
+        // mergeArray[16].insert(3);
+        //
+        // mergeArray[8].insert(5);
+        // mergeArray[12].insert(4);
+        //
+        // mergeArray[24].insert(7);
+        // mergeArray[28].insert(6);
+        //
+        // mergeArray[20].insert(2);
+        // mergeArray[4].insert(0);
+        //
+        // mergeArray[1].insert(9);
+        // mergeArray[2].insert(16);
+        // mergeArray[3].insert(17);
+        // mergeArray[5].insert(8);
+        // mergeArray[6].insert(20);
+        // mergeArray[7].insert(21);
+        // mergeArray[9].insert(13);
+        // mergeArray[10].insert(18);
+        // mergeArray[11].insert(19);
+        // mergeArray[13].insert(12);
+        // mergeArray[14].insert(22);
+        // mergeArray[15].insert(23);
+        // mergeArray[17].insert(11);
+        // mergeArray[18].insert(24);
+        // mergeArray[19].insert(25);
+        // mergeArray[21].insert(10);
+        // mergeArray[22].insert(28);
+        // mergeArray[23].insert(29);
+        // mergeArray[25].insert(15);
+        // mergeArray[26].insert(26);
+        // mergeArray[27].insert(27);
+        // mergeArray[29].insert(14);
+        // mergeArray[30].insert(30);
+        // mergeArray[31].insert(31);
+
+        // Asignacion completa1 mismo core
+        // mergeArray[0].insert(1);
+        // mergeArray[16].insert(3);
+        //
+        // mergeArray[8].insert(5);
+        // mergeArray[12].insert(4);
+        //
+        // mergeArray[24].insert(7);
+        // mergeArray[28].insert(6);
+        //
+        // mergeArray[20].insert(2);
+        // mergeArray[4].insert(0);
+        //
+        // mergeArray[1].insert(9);
+        // mergeArray[2].insert(16);
+        // mergeArray[3].insert(20);
+        // mergeArray[5].insert(8);
+        // mergeArray[6].insert(17);
+        // mergeArray[7].insert(21);
+        // mergeArray[9].insert(13);
+        // mergeArray[10].insert(18);
+        // mergeArray[11].insert(22);
+        // mergeArray[13].insert(12);
+        // mergeArray[14].insert(19);
+        // mergeArray[15].insert(23);
+        // mergeArray[17].insert(11);
+        // mergeArray[18].insert(24);
+        // mergeArray[19].insert(28);
+        // mergeArray[21].insert(10);
+        // mergeArray[22].insert(25);
+        // mergeArray[23].insert(29);
+        // mergeArray[25].insert(15);
+        // mergeArray[26].insert(26);
+        // mergeArray[27].insert(30);
+        // mergeArray[29].insert(14);
+        // mergeArray[30].insert(27);
+        // mergeArray[31].insert(31);
+
         mergeArray.doneInserting();
     }
     else{
@@ -206,9 +300,9 @@ void Main::startNextPhase() {
 void Main::terminar(int tam, int valuesSort[]) {
     fin=CkWallTimer();		//Toma tiempo de fin
     stop = CkWallTimer();
-    // for(int i=tam-15;i<tam;i++){
-    //     CkPrintf("After: Merge[%d]=%d\n",i,valuesSort[i]);
-    // }
+    for(int i=tam-15;i<tam;i++){
+        CkPrintf("After: Merge[%d]=%d\n",i,valuesSort[i]);
+    }
     // Exit the program
     CkPrintf("\n========================================");	//Imprime tiempos
     CkPrintf("\n========================================");	//Imprime tiempos

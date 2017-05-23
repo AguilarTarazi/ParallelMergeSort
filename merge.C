@@ -23,19 +23,39 @@ Merge::Merge() {
 Merge::Merge(CkMigrateMessage *msg) { }
 
 void Merge::initPhase(int pos, int posDer, int phaseN, int tam,int values[],int proxIndex) {
-    elementos = tam;
-    int *valuesIzq = (int *)malloc(sizeof(int)*(elementos/2));
-    int *valuesDer = (int *)malloc(sizeof(int)*(elementos-elementos/2));
-    if(valuesIzq == NULL){
-        CkPrintf("[%d] valuesIzq es NULL\n",thisIndex);
-        CkExit();
+    // CkPrintf("[%d] sizeof %d\n",thisIndex,sizeof(values)/sizeof(int));
+    if(tam==0){
+    // if(values==NULL){
+      elementos = elementos / 2;
+      // CkPrintf("[%d] realloc init\n",thisIndex);
+      myValues = (int *)realloc(myValues,(elementos)*sizeof(int));
     }
+    else{
+      elementos = tam;
+      // CkPrintf("[%d] malloc init\n",thisIndex);
+      myValues = (int *)malloc(sizeof(int)*elementos);
+      if(myValues == NULL){
+        CkPrintf("[%d] myValues es NULL\n",thisIndex);
+        CkExit();
+      }
+      // CkPrintf("[%d] memcpy init\n",thisIndex);
+      memcpy(myValues,values,(elementos)*sizeof(int));        //Se copian los valores en variable local
+    }
+    // int *valuesIzq = (int *)malloc(sizeof(int)*(elementos/2));
+    // if(valuesIzq == NULL){
+    //     CkPrintf("[%d] valuesIzq es NULL\n",thisIndex);
+    //     CkExit();
+    // }
+    // CkPrintf("[%d] malloc valuesDer init\n",thisIndex);
+    int *valuesDer = (int *)malloc(sizeof(int)*(elementos-elementos/2));
     if(valuesDer == NULL){
         CkPrintf("[%d] valuesDer es NULL\n",thisIndex);
         CkExit();
     }
-    memcpy(valuesIzq,values,(elementos/2)*sizeof(int));
-    memcpy(valuesDer,values+elementos/2,(elementos-elementos/2)*sizeof(int));
+    //memcpy(valuesIzq,values,(elementos/2)*sizeof(int));
+    // CkPrintf("[%d] memcpy valuesDer init\n",thisIndex);
+    memcpy(valuesDer,myValues+elementos/2,(elementos-elementos/2)*sizeof(int));
+    // CkPrintf("[%d] memcpy+ valuesDer init\n",thisIndex);
     phase = phaseN;
     phase++;
     if(posDer!=-1){
@@ -45,12 +65,12 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int tam,int values[],int 
     newcantChares = pos-thisIndex+1;
     newPos = newcantChares/2-1+thisIndex;
     if(newcantChares < 2){
-        myValues = (int *)malloc(sizeof(int)*elementos);
-        if(myValues == NULL){
-            CkPrintf("[%d] myValues es NULL\n",thisIndex);
-            CkExit();
-        }
-        memcpy(myValues,values,(elementos)*sizeof(int));        //Se copian los valores en variable local
+        // myValues = (int *)malloc(sizeof(int)*elementos);
+        // if(myValues == NULL){
+        //     CkPrintf("[%d] myValues es NULL\n",thisIndex);
+        //     CkExit();
+        // }
+        // memcpy(myValues,values,(elementos)*sizeof(int));        //Se copian los valores en variable local
         sort(0,elementos-1);
         // mainProxy.barrier();
         if(posDer!=-1){
@@ -59,10 +79,10 @@ void Merge::initPhase(int pos, int posDer, int phaseN, int tam,int values[],int 
         }
     }
     else{
-        thisProxy[thisIndex].initPhase(newPos,pos,phase,elementos/2,valuesIzq,newPos+1);
+        thisProxy[thisIndex].initPhase(newPos,pos,phase,0,NULL,newPos+1);
         thisProxy[newPos+1].initPhase(pos,-1,phase,elementos-elementos/2,valuesDer,-1);
-        free(valuesIzq);
-        valuesIzq=NULL;
+        // free(valuesIzq);
+        // valuesIzq=NULL;
         free(valuesDer);
         valuesDer=NULL;
     }
