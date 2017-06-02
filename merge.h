@@ -5,10 +5,11 @@ class Merge : public CBase_Merge {
 
  private:
   /// Member Variables (Object State) ///
-  int newPos, newcantChares, phase;
-  int indexLlamoIzq, cantFases, elementos;
-  bool activo;
+  int newLastChareIzq, cantChares, phase;
+  int indexLlamoIzq, valueLlamoIzq, cantFases, elementos;
+  bool activo, ordenado;
   int *myValues;
+  long tiempo;
   int comparar[30];
   /// Member Functions (private) ///
   void sort(int,int);
@@ -22,11 +23,9 @@ class Merge : public CBase_Merge {
   Merge(CkMigrateMessage *msg);
   /// Entry Methods ///
   void initPhase(int,int,int,int,int[],int);
-  void startCompare(int);
   void requestSwap(int,int,int);
   void saveValue(int [],int,bool);
   void check();
-  void listo();
 };
 
 #endif //__MERGE_H__

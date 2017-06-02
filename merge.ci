@@ -3,11 +3,9 @@ module merge {
   array [1D] Merge {
     entry Merge();
     entry void initPhase(int a,int b,int c,int n,int val[n],int d);
-    entry void startCompare(int a);
     entry void requestSwap(int a,int b,int c);
     entry void saveValue(int val[m],int m,bool a);
     entry void check();
-    entry void listo();
 
   };
 

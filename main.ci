@@ -2,15 +2,12 @@ mainmodule main {
 
   readonly CProxy_Main mainProxy;
   readonly int numElements;
-  readonly int cantChares;
 
   extern module merge;
 
   mainchare Main {
     entry Main(CkArgMsg* msg);
     entry void terminar(int n,int values[n]);
-    entry void barrier();
-    //entry void enviarCb(CkCallbackResumeThread &cb);
   };
 
   initproc void processorStartupFunc();

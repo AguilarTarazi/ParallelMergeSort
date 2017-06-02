@@ -11,7 +11,12 @@ cantChares como variable de solo lectura
 
 /* readonly */ CProxy_Main mainProxy;
 /* readonly */ int numElements;
-/* readonly */ int cantChares;
+
+/*
+EJEMPLO
+@param	nombre del parámetro	descripción de su significado y uso
+@name
+*/
 
 Main::Main(CkArgMsg* msg) {
     //Initialize member variables
@@ -67,39 +72,39 @@ Main::Main(CkArgMsg* msg) {
     if(CmiNumPes() == 32 ){
         CkPrintf("Modo de Asignación: Manual para 32 hilos.\n");
         //Asignacion sobre physical 0
-        mergeArray[0].insert(0);
-        mergeArray[16].insert(4);
-
-        mergeArray[8].insert(1);
-        mergeArray[12].insert(5);
-
-        mergeArray[24].insert(2);
-        mergeArray[28].insert(3);
-
-        mergeArray[20].insert(6);
-        mergeArray[4].insert(7);
-
-        int RR = 8;
-        for (int i = 0; i < cantChares; i++){
-          if(i != 0 && i != 16 && i != 8 && i != 12 && i != 24 && i != 28 && i != 20 && i != 4)
-              if(RR < CmiNumPes()){
-                // while(RR == 0 || RR == 4 || RR == 1 || RR == 5 || RR == 2 || RR == 6 || RR == 3 || RR == 7 )
-                // while(RR < 8 || RR > 15)
-                //   RR++;
-                // if(RR == 8)
-                  // RR = 16;
-                mergeArray[i].insert(RR++);
-                CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
-              }
-              // Para cuando hay mas chares que procesadores
-              else{
-                RR = 0;
-                mergeArray[i].insert(RR++);
-                CkPrintf("Chare %d agregado al procesador %d. +\n",i,RR-1);
-              }
-          else
-            CkPrintf("Chare %d agregado *\n",i);
-        }
+        // mergeArray[0].insert(0);
+        // mergeArray[16].insert(4);
+        //
+        // mergeArray[8].insert(1);
+        // mergeArray[12].insert(5);
+        //
+        // mergeArray[24].insert(2);
+        // mergeArray[28].insert(3);
+        //
+        // mergeArray[20].insert(6);
+        // mergeArray[4].insert(7);
+        //
+        // int RR = 8;
+        // for (int i = 0; i < cantChares; i++){
+        //   if(i != 0 && i != 16 && i != 8 && i != 12 && i != 24 && i != 28 && i != 20 && i != 4)
+        //       if(RR < CmiNumPes()){
+        //         // while(RR == 0 || RR == 4 || RR == 1 || RR == 5 || RR == 2 || RR == 6 || RR == 3 || RR == 7 )
+        //         // while(RR < 8 || RR > 15)
+        //         //   RR++;
+        //         // if(RR == 8)
+        //           // RR = 16;
+        //         mergeArray[i].insert(RR++);
+        //         CkPrintf("Chare %d agregado al procesador %d\n",i,RR-1);
+        //       }
+        //       // Para cuando hay mas chares que procesadores
+        //       else{
+        //         RR = 0;
+        //         mergeArray[i].insert(RR++);
+        //         CkPrintf("Chare %d agregado al procesador %d. +\n",i,RR-1);
+        //       }
+        //   else
+        //     CkPrintf("Chare %d agregado *\n",i);
+        // }
 
         //Asignacion sobre physical 1
         // mergeArray[0].insert(8);
@@ -213,6 +218,16 @@ Main::Main(CkArgMsg* msg) {
         // mergeArray[30].insert(27);
         // mergeArray[31].insert(31);
 
+        //Asginacion Agrupada
+        mergeArray[0].insert(0);
+        mergeArray[16].insert(16);
+        mergeArray[8].insert(8);
+        mergeArray[24].insert(24);
+        mergeArray[12].insert(5);
+        mergeArray[28].insert(3);
+        mergeArray[20].insert(6);
+        mergeArray[4].insert(7);
+
         mergeArray.doneInserting();
     }
     else{
@@ -300,27 +315,43 @@ void Main::startNextPhase() {
 void Main::terminar(int tam, int valuesSort[]) {
     fin=CkWallTimer();		//Toma tiempo de fin
     stop = CkWallTimer();
-    for(int i=tam-15;i<tam;i++){
-        CkPrintf("After: Merge[%d]=%d\n",i,valuesSort[i]);
+    int n = numElements;
+    int error = 0;
+    for(int i = 0; i < n-1; i++){
+      // if(i < n-1)
+        if(valuesSort[i] > valuesSort[i+1])
+          error = 1;
     }
+    // for(int i=n-5; i<n; i++)
+    // CkPrintf("\nAfter: Merge[%d]=%d",i,valuesSort[i]);
     // Exit the program
-    CkPrintf("\n========================================");	//Imprime tiempos
-    CkPrintf("\n========================================");	//Imprime tiempos
-    CkPrintf("\nTIEMPO DE CALCULO: %f\n",fin-inicio);	//Imprime tiempos
-    CkPrintf("\n========================================");	//Imprime tiempos
-    CkPrintf("\n========================================");	//Imprime tiempos
+    CkPrintf("\n[pmerge]========================================================================================================");
+    // CkPrintf("\n[pmerge]==================================================================================================================");
+    CkPrintf("\n[pmerge Tiempo: %.2f segundos\t| Cantidad de Chares: %d\t| Cantidad de Elementos: %'d ",fin-inicio,cantChares,numElements);	//Imprime tiempos
+    // CkPrintf("\n[pmerge]\tTiempo: %.2f segundos\t|\tCantidad de Chares: %d\t|\tCantidad de Elementos: %'d ",fin-inicio,cantChares,numElements);	//Imprime tiempos
+    if(error == 1)      CkPrintf("Orden: ERROR");
+    else      CkPrintf("\tOrden: OK");
+    // CkPrintf("\n=============================================================================================");
+    // CkPrintf("\n                                     FIN DEL PROGRAMA                                         ");
+    CkPrintf("\n[pmerge]========================================================================================================\n");
+    // CkPrintf("\n[pmerge]==========================================================================================================\n");
+
+
+
+
+    // for(int i=tam-15;i<tam;i++){
+    //     CkPrintf("After: Merge[%d]=%d\n",i,valuesSort[i]);
+    // }
+    // // Exit the program
+    // CkPrintf("\n========================================");	//Imprime tiempos
+    // CkPrintf("\n========================================");	//Imprime tiempos
+    // CkPrintf("\nTIEMPO DE CALCULO: %f\n",fin-inicio);	//Imprime tiempos
+    // CkPrintf("\n========================================");	//Imprime tiempos
+    // CkPrintf("\n========================================");	//Imprime tiempos
     // CkPrintf("\nTIEMPO DE EJECUCION: %f\n\n",stop-start);	//Imprime tiempos
     CkExit();
 }
 
-void Main::barrier(){
-    cantCheck++;
-    // CkPrintf("cantCheck: %d\n",cantCheck);
-    if(cantCheck==cantChares){
-        // CkPrintf("LISTO\n");
-        mergeArray.listo();
-    }
-}
 
 // Because this function is declared in a ".ci" file (main.ci in this
 //   case) with the "initproc" keyword, it will be called once at startup

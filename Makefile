@@ -7,7 +7,7 @@ all: merge
 
 merge : main.o merge.o
 	$(CHARMC) -language charm++ -o merge main.o merge.o -tracemode projections
-	ulimit -s unlimited
+	# ulimit -s unlimited
 
 main.o : main.C main.h main.decl.h main.def.h merge.decl.h
 	$(CHARMC) -o main.o main.C -O3

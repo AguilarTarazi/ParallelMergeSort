@@ -2,7 +2,7 @@
 #include <omp.h>
 #include <stdlib.h>
 
-#define VECLEN 100000000
+#define VECLEN 10000000
 
 int a[VECLEN];
 int ndv;
@@ -33,31 +33,32 @@ void Merge(int *B, int half, int size,int stg) {
   ia=0;
   ib=half;
   for (i=0;i<half;i++)
-  tmp[i]=a[i];
-  for (i=0;i<size-half;i++)
-  tmp[half+i]=B[i];
-  int *dato;
+  tmp[i]=1;
+  // tmp[i]=a[i];
+  // for (i=0;i<size-half;i++)
+  // tmp[half+i]=B[i];
+  // int *dato;
   //printf("entro en merge con %d %d\n",size,stg);
-  for (i=0;i<size;i++){
-    //      printf("%d %d\n",*(a+ia),*(B+ib));
-    if (ia>=half){
-      *(a+i)=*(tmp+ib);
-      ib++;
-    } else {
-      if (ib>=size){
-        *(a+i)=*(tmp+ia);
-        ia++;
-      } else {
-        if ((*(tmp+ia)) < (*(tmp+ib))){
-          *(a+i)=*(tmp+ia);
-          ia++;
-        } else {
-          *(a+i)=*(tmp+ib);
-          ib++;
-        }
-      }
-    }
-  }
+  // for (i=0;i<size;i++){
+  //   //      printf("%d %d\n",*(a+ia),*(B+ib));
+  //   if (ia>=half){
+  //     *(a+i)=*(tmp+ib);
+  //     ib++;
+  //   } else {
+  //     if (ib>=size){
+  //       *(a+i)=*(tmp+ia);
+  //       ia++;
+  //     } else {
+  //       if ((*(tmp+ia)) < (*(tmp+ib))){
+  //         *(a+i)=*(tmp+ia);
+  //         ia++;
+  //       } else {
+  //         *(a+i)=*(tmp+ib);
+  //         ib++;
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 void Sort(int size, int stg) {

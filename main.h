@@ -13,7 +13,7 @@ class Main : public CBase_Main {
   CProxy_Merge mergeArray;
   float inicio,fin,start,stop;
   int *values;
-  int value,cantCheck;
+  int value,cantCheck, cantChares;
 
   /// Private Member Functions ///
   void startNextPhase();
