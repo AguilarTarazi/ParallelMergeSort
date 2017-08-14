@@ -14,15 +14,15 @@ http://charm.cs.illinois.edu/manuals/html/charm++/A.html
 # Documentation
 
   ## Manual in English
-  [[PDF]](http://charm.cs.illinois.edu/manuals/pdf/charm++.pdf) 
-  [[html]](http://charm.cs.illinois.edu/manuals/html/charm++/manual.html) 
-  [[1-page]](http://charm.cs.illinois.edu/manuals/html/charm++/manual-1p.html)
+  * [[PDF]](http://charm.cs.illinois.edu/manuals/pdf/charm++.pdf) 
+  * [[html]](http://charm.cs.illinois.edu/manuals/html/charm++/manual.html) 
+  * [[1-page]](http://charm.cs.illinois.edu/manuals/html/charm++/manual-1p.html)
   
   ## Others Manuals
   http://charmplusplus.org/help/
 
   ## Tutorial
-  [English](http://charmplusplus.org/tutorial/)
-  [Spanish](link) (non-official)
+  * [English](http://charmplusplus.org/tutorial/)
+  * [Spanish](link) (non-official)
   
   ## Full report
