@@ -12,12 +12,14 @@ In "[-] Charm++" / "Download | Source Code"
 
 # Install Charm++
 Hacer paso a paso de instalacion
+
 http://charm.cs.illinois.edu/manuals/html/charm++/A.html
 
 # Documentation
 
   ## Manual in English
   http://charm.cs.illinois.edu/manuals/html/charm++/
+  
   http://charm.cs.illinois.edu/manuals/html/charm++/manual-1p.html
 
   ## Others Manuals
