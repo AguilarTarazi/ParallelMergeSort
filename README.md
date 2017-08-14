@@ -5,13 +5,15 @@ This project is a parallel merge sort writted in Charm++. The purpose is obtain 
 
 Charm++ is a C++-based parallel programming system, founded on the migratable-objects programming model, and supported by a novel and powerful adaptive runtime system. It supports both irregular as well as regular applications, and can be used to specify task-parallelism as well as data parallelism in a single application. It automates dynamic load balancing for task-parallel as well as data-parallel applications, via separate suites of load-balancing strategies. Via its message-driven execution model, it supports automatic latency tolerance, modularity and parallel composition. Charm++ also supports automatic checkpoint/restart, as well as fault tolerance based on distributed checkpoints.
 
-# Documentation
+# Download Charm++
+http://charm.cs.uiuc.edu/software
+In "[-] Charm++" / "Download | Source Code"
 
-  ## Full report
-  
-  ## Install Charm++
-  Hacer paso a paso de instalacion
-  http://charm.cs.illinois.edu/manuals/html/charm++/A.html
+# Install Charm++
+Hacer paso a paso de instalacion
+http://charm.cs.illinois.edu/manuals/html/charm++/A.html
+
+# Documentation
 
   ## Manual in English
   http://charm.cs.illinois.edu/manuals/html/charm++/
@@ -25,6 +27,4 @@ Charm++ is a C++-based parallel programming system, founded on the migratable-ob
 
   ## Tutorial in Spanish (non-official)
 
-# Download Charm++
-http://charm.cs.uiuc.edu/software
-In "[-] Charm++" / "Download | Source Code"
+  ## Full report
