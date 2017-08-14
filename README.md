@@ -9,14 +9,13 @@ Charm++ is a C++-based parallel programming system, founded on the migratable-ob
 
   ## Full report
   
-
   ## Install Charm++
   Hacer paso a paso de instalacion
   http://charm.cs.illinois.edu/manuals/html/charm++/A.html
 
   ## Manual in English
-  http://charm.cs.illinois.edu/manuals/html/charm++/ 
-  1-page -> http://charm.cs.illinois.edu/manuals/html/charm++/manual-1p.html
+  http://charm.cs.illinois.edu/manuals/html/charm++/
+  http://charm.cs.illinois.edu/manuals/html/charm++/manual-1p.html
 
   ## Others Manuals
   http://charmplusplus.org/help/
@@ -25,7 +24,6 @@ Charm++ is a C++-based parallel programming system, founded on the migratable-ob
   http://charmplusplus.org/tutorial/
 
   ## Tutorial in Spanish (non-official)
-  
 
 # Download Charm++
 http://charm.cs.uiuc.edu/software
