@@ -26,3 +26,4 @@ http://charm.cs.illinois.edu/manuals/html/charm++/A.html
   * [Spanish](link) (non-official)
   
   ## Full report
+  ParallelMergeSort/Charm++_AguilarTarazi.pdf 
