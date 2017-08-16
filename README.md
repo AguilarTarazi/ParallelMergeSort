@@ -19,11 +19,11 @@ Charm++ is a C++-based parallel programming system, founded on the migratable-ob
   * [[1-page]](http://charm.cs.illinois.edu/manuals/html/charm++/manual-1p.html)
   
   ## Others Manuals
-  * http://charmplusplus.org/help/
+  * [Others Manuals](http://charmplusplus.org/help/)
 
   ## Tutorial
   * [English](http://charmplusplus.org/tutorial/)
-  * [Spanish](link) (non-official)
+  * [Spanish](https://drive.google.com/open?id=0B4pJpcZnNj8-bWY2R0w5TG11Zmc) (non-official)
   
   ## Full report
   * [Charm++_AguilarTarazi](https://github.com/AguilarTarazi/ParallelMergeSort/blob/master/Charm%2B%2B_AguilarTarazi.pdf)
